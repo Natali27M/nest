@@ -27,26 +27,26 @@ export class UserController {
   @Get('/:id')
   getOneUserById(@Param('id') id: string) {
     // return `Get one user : ${id}`;
-    return this.userService.getOneUserById(id);
+    return this.userService.getOneById(id);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
   createUser(@Body() userDto: CreateUserDto) {
     // return userDto;
-    return this.userService.createUser(userDto);
+    return this.userService.create(userDto);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('/:id')
   updateUser(@Body() userDto: CreateUserDto, @Param('id') id: string) {
     // return userDto;
-    return this.userService.updateUserById(id, userDto);
+    return this.userService.updateById(id, userDto);
   }
 
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
   deleteUserById(@Param('id') id: string) {
-    return this.userService.deleteUserById(id);
+    return this.userService.deleteById(id);
   }
 }
