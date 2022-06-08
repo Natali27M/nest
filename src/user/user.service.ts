@@ -14,7 +14,7 @@ export class UserService {
   getOneById(userId: string): Promise<User> {
     return this.prismaService.user.findUnique({
       where: { id: Number(userId) },
-      include: { posts: true },
+      include: { posts: true, comments: true },
     });
   }
 
@@ -30,6 +30,6 @@ export class UserService {
   }
 
   deleteById(userId: string) {
-    this.prismaService.user.delete({ where: { id: Number(userId) } });
+    return this.prismaService.user.delete({ where: { id: Number(userId) } });
   }
 }
