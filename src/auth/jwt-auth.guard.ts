@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException({ message: 'User is not authorized' });
       }
       this.jwtService.verify(token, {
-        publicKey: 'PRIVATE_KEY',
+        publicKey: 'Secret',
       });
       return true;
     } catch (err) {
