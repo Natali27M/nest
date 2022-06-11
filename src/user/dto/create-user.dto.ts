@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
 } from 'class-validator';
@@ -23,10 +24,12 @@ export class CreateUserDto {
 
   @ApiProperty({ example: 20, description: 'age' })
   @IsNumber()
+  @IsOptional()
   public age: number;
 
   @ApiProperty({ example: 'Lviv', description: 'city' })
   @IsString()
+  @IsOptional()
   public city: string;
 
   @ApiProperty({ example: 'abc123', description: 'password' })
@@ -36,5 +39,6 @@ export class CreateUserDto {
 
   @ApiProperty({ example: true, description: 'status' })
   @IsBoolean()
+  @IsOptional()
   public status: boolean;
 }

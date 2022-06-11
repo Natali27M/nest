@@ -8,11 +8,13 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PostService } from './post.service';
 import { CreatePostDto, UpdatePostDto } from './dto';
+import { IMiddlewareRequest } from 'src/auth/interfaces/middleware-request.interface';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -104,7 +106,9 @@ export class PostController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  create(@Body() postDto: CreatePostDto) {
+  create(@Req() req: IMiddlewareRequest, @Body() postDto: CreatePostDto) {
+    const user = req.user;
+    console.log(user);
     return this.postService.create(postDto);
   }
 

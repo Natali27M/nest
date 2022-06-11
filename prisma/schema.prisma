@@ -9,14 +9,15 @@ datasource db {
 
 model User {
   id       Int       @id @default(autoincrement())
-  name     String
+  name     String?
   email    String    @unique
-  age      Int
+  age      Int?      @default(0)
   city     String?
   password String
-  status   Boolean
+  status   Boolean?  @default(false)
+  token    String?
   posts    Post[]
-  comments  Comment[]
+  comments Comment[]
 }
 
 model Post {
