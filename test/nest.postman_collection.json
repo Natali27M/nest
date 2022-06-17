@@ -1,0 +1,544 @@
+{
+	"info": {
+		"_postman_id": "7c95beeb-5ccc-4299-8df4-47d6943f063f",
+		"name": "nest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19930860"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "allUsers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const userId = pm.environment.get(\"user-id\");\r",
+									"\r",
+									"pm.test(\"Check is user exist in list\", () => {\r",
+									"const usersList = pm.response.json();\r",
+									"    const FindUser = usersList.filter(user => user.id === userId);\r",
+									"    pm.expect(FindUser[0].id).to.eql(userId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOneUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const userId = pm.environment.get(\"user-id\");\r",
+									"\r",
+									"pm.test(\"Check user id\", () => {\r",
+									"    const jsonData = pm.response.json().id;\r",
+									"    pm.expect(jsonData).to.eql(userId);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/{{user-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"{{user-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"user-id\", pm.response.json().id);\r",
+									"console.log(pm.response.json().id)\r",
+									"\r",
+									"pm.test(\"Correct response data\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.email).to.be.a('string');\r",
+									"    pm.expect(jsonData.id).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check name of user\", () => {\r",
+									"    const requestName = JSON.parse(pm.request.body).name\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.be.a('string');\r",
+									"    pm.expect(jsonData.name).to.equal(requestName);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Test2\",\r\n    \"email\" : \"Tes2t@gmail.com\",\r\n    \"age\" : 25,\r\n    \"city\" : \"Lviv\",\r\n    \"password\" : \"Test2\",\r\n    \"status\" : false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUserById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updeteUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"setTimeout(function() {\r",
+									"console.log('Pre-requestwaiting')\r",
+									"}, 2000)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Correct response avatar\", () => {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.avatar).to.be.a('string');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "./test/file/1809.jpg"
+								},
+								{
+									"key": "name",
+									"value": "\"NewIra\"",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/{{user-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"{{user-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAvatar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/avatar/34ff9d5980d3d1f66caa1c2a5e8251941809.jpg",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"avatar",
+								"34ff9d5980d3d1f66caa1c2a5e8251941809.jpg"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "post",
+			"item": [
+				{
+					"name": "allPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOnePost",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/posts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postPost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"Post4\",\r\n    \"content\" : \"Text4\",\r\n    \"published\" : false,\r\n    \"authorId\" : 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePostById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/posts/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePost",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"NewPost\",\r\n    \"content\" : \"NewText\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/posts/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comment",
+			"item": [
+				{
+					"name": "allComents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postComment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\" : \"Text4\",\r\n    \"published\" : false,\r\n    \"authorId\" : 2,\r\n    \"postId\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateComment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\" : \"New text\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/comments/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"comments",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCommentById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/comments/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"comments",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOneComment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/comments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "registration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"lilya@gmail.com\",\r\n    \"password\" : \"lilya123\",\r\n    \"name\" : \"Lilya\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/registration",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRvbHlhQGdtYWlsLmNvbSIsImlkIjo5LCJuYW1lIjoiVG9seWEiLCJpYXQiOjE2NTQ5NzA1MzksImV4cCI6MTY1NTA1NjkzOX0.31-8KBLcgP_lgYGb-ugjxRd1QhH090YyuBrrUyaFb_M",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

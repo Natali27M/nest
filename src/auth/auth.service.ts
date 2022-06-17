@@ -52,4 +52,20 @@ export class AuthService {
     }
     throw new UnauthorizedException({ message: 'Wrong email or password' });
   }
+
+  async getVerifiedUserId(jwt: string): Promise<string | null> {
+    try {
+      const token = AuthService.getTokenFromDb(jwt);
+      const user = await this.jwtService.verify(token, {
+        publicKey: 'Secret',
+      });
+      return user.id;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private static getTokenFromDb(jwt: string) {
+    return jwt.split(' ')[1];
+  }
 }

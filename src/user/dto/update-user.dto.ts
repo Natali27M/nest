@@ -16,4 +16,12 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   public city: string;
+
+  @ApiProperty({
+    example: 'avatar/e09abe5d3b94999bb54b67211bd278f31809.jpg',
+    description: 'avatar',
+  })
+  @IsString()
+  @IsOptional()
+  public avatar: string;
 }

@@ -8,14 +8,20 @@ import {
   Param,
   Post,
   Put,
+  Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 import { CreateUserDto } from './dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto';
 import { AuthGuard } from 'src/auth/jwt-auth.guard';
+import { imageFileFilter } from '../utils/image.filter';
 
 @ApiTags('Users')
 @Controller('users')
@@ -121,7 +127,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   getOneUserById(@Param('id') id: string) {
-    return this.userService.getOneById(id);
+    return this.userService.getOneById(id)
   }
 
   @ApiOperation({ summary: 'Create user' })
@@ -162,8 +168,48 @@ export class UserController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Put('/:id')
-  updateUser(@Body() userData: UpdateUserDto, @Param('id') id: string) {
-    return this.userService.updateById(userData, id);
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: './avatar',
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+
+          return cb(null, `${randomName}${file.originalname}`);
+        },
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
+  updateUser(
+    @Body() userData: UpdateUserDto,
+    @Param('id') id: string,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
+    let newAvatarPath: string = null;
+    try {
+      if (avatar) {
+        const randomName = Array(32)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+
+        newAvatarPath = `avatar/${randomName}${avatar.originalname}`;
+      }
+
+      userData.avatar = newAvatarPath;
+      return this.userService.updateById(userData, id);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  @Get('avatar/:image')
+  watchFile(@Param('image') image, @Res() res) {
+    return res.sendFile(image, { root: './avatar' });
   }
 
   @ApiOperation({ summary: 'Delete user' })

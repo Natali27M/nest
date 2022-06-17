@@ -15,6 +15,7 @@ model User {
   city     String?
   password String
   status   Boolean?  @default(false)
+  avatar   String?
   token    String?
   posts    Post[]
   comments Comment[]
